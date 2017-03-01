@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+    body,
+    html {
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+</head>
+
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.js"></script>
+    <script>
+    var socket = io.connect(window.location.origin);
+
+    function setup(){
+      createCanvas(windowWidth, windowHeight);
+    }
+    function drawRect(x, y, r, g, b) {
+      
+      noStroke();
+      fill(r, g, b);
+      ellipse(x, y, 30, 45);
+    }
+
+    
+
+    document.body.addEventListener('click', function(e) {
+      var red = random(0,255);
+    var green = random(0,255);
+    var blue = random(0,255);
+        socket.emit('draw', {
+            x: e.clientX,
+            y: e.clientY,
+            r: red,
+            g: green,
+            b: blue
+        });
+        drawRect(e.clientX, e.clientY, red, green, blue);
+    });
+    socket.on('draw', function(data) {
+        drawRect(data.x, data.y, data.r, data.g, data.b);
+    });
+    </script>
+</body>
+
+</html>
